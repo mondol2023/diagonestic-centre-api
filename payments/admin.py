@@ -1,17 +1,17 @@
 from django.contrib import admin
-from .models import Pay, Payment, PaymentRefund
+from .models import Process, Payment, PaymentRefund
 
 # Register your models here.
-@admin.register(Pay)
-class PayAdmin(admin.ModelAdmin):
+@admin.register(Process)
+class ProcessAdmin(admin.ModelAdmin):
     list_display = (
-        'pay_id', 'patient', 'appointment', 'subtotal', 'discount_amount',
+        'process_id', 'patient', 'appointment', 'subtotal', 'discount_amount',
         'tax_amount', 'total_amount', 'paid_amount', 'balance_amount_display',
         'status', 'due_date', 'created_by', 'created_at'
     )
     list_filter = ('status', 'due_date', 'created_at')
     search_fields = (
-        'pay_id', 'patient__username', 'appointment__appointment_id', 'created_by__username'
+        'process_id', 'patient__username', 'appointment__appointment_id', 'created_by__username'
     )
     ordering = ('-created_at',)
     autocomplete_fields = ['patient', 'appointment', 'created_by']
@@ -26,15 +26,15 @@ class PayAdmin(admin.ModelAdmin):
 @admin.register(Payment)
 class PaymentAdmin(admin.ModelAdmin):
     list_display = (
-        'payment_id', 'pay', 'amount', 'payment_method', 'payment_status',
+        'payment_id', 'process', 'amount', 'payment_method', 'payment_status',
         'transaction_id', 'reference_number', 'payment_date', 'processed_by'
     )
     list_filter = ('payment_method', 'payment_status', 'payment_date')
     search_fields = (
-        'payment_id', 'pay__pay_id', 'transaction_id', 'reference_number', 'processed_by__username'
+        'payment_id', 'process__process_id', 'transaction_id', 'reference_number', 'processed_by__username'
     )
     ordering = ('-payment_date',)
-    autocomplete_fields = ['pay', 'processed_by']
+    autocomplete_fields = ['process', 'processed_by']
     date_hierarchy = 'payment_date'
 
 @admin.register(PaymentRefund)
