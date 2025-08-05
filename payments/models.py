@@ -4,15 +4,15 @@ from accounts.models import User
 from appoinments.models import Appointment
 
 # Create your models here.
-class Pay(models.Model):
-    PAY_STATUS = (
+class Process(models.Model):
+    PROCESS_STATUS = (
         ('PENDING', 'Pending'),
         ('PAID', 'Paid'),
         ('PARTIALLY_PAID', 'Partially Paid'),
         ('OVERDUE', 'Overdue'),
         ('CANCELLED', 'Cancelled'),
     )
-    pay_id = models.CharField(max_length=20, unique=True)
+    process_id = models.CharField(max_length=20, unique=True)
     appointment = models.OneToOneField(Appointment, on_delete=models.CASCADE)
     patient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='pay')
     
@@ -22,7 +22,7 @@ class Pay(models.Model):
     total_amount = models.DecimalField(max_digits=10, decimal_places=2)
     paid_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
-    status = models.CharField(max_length=20, choices=PAY_STATUS, default='PENDING')
+    status = models.CharField(max_length=20, choices=PROCESS_STATUS, default='PENDING')
     due_date = models.DateField()
 
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='created_pays')
@@ -34,7 +34,7 @@ class Pay(models.Model):
         return self.total_amount - self.paid_amount
     
     def __str__(self):
-        return f"Pay {self.pay_id} - {self.patient.get_full_name()}"
+        return f"Process {self.process_id} - {self.patient.get_full_name()}"
 
 class Payment(models.Model):
     PAYMENT_METHODS = (
@@ -53,7 +53,7 @@ class Payment(models.Model):
     )
     
     payment_id = models.CharField(max_length=20, unique=True)
-    pay = models.ForeignKey(Pay, on_delete=models.CASCADE, related_name='payments')
+    process = models.ForeignKey(Process, on_delete=models.CASCADE, related_name='payments')
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     payment_method = models.CharField(max_length=20, choices=PAYMENT_METHODS)
     payment_status = models.CharField(max_length=20, choices=PAYMENT_STATUS, default='PENDING')
