@@ -1,14 +1,14 @@
 from rest_framework import serializers
-from .models import Payment,  Pay, PaymentRefund
+from .models import Payment,  Process, PaymentRefund
 
-class PaySerializer(serializers.ModelSerializer):
+class ProcessSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Pay
+        model = Process 
         fields = '__all__'
         read_only_fields = ('balance_amount', 'created_at', 'updated_at')
 
 class PaymentSerializer(serializers.ModelSerializer):
-    pay = PaySerializer(read_only=True)
+    process = ProcessSerializer(read_only=True)
 
     class Meta:
         model = Payment
