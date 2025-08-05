@@ -3,34 +3,34 @@ from . import views
 
 urlpatterns = [
     path(
-        'pays/',
-        views.PayViewSet.as_view({'get': 'list', 'post': 'create'}),
-        name='pay-list'
+        'process'/',
+        views.ProceddViewSet.as_view({'get': 'list', 'post': 'create'}),
+        name='process-list'
     ),
     path(
-        'pays/<int:pk>/',
-        views.PayViewSet.as_view({
+        'process/<int:pk>/',
+        views.ProcessViewSet.as_view({
             'get': 'retrieve',
             'put': 'update',
             'patch': 'partial_update',
             'delete': 'destroy'
         }),
-        name='pay-detail'
+        name='process-detail'
     ),
     path(
-        'pays/<int:pk>/payment_history/',
-        views.PayViewSet.as_view({'get': 'payment_history'}),
-        name='pay-payment-history'
+        'process/<int:pk>/payment_history/',
+        views.ProcessViewSet.as_view({'get': 'payment_history'}),
+        name='process-payment-history'
     ),
     path(
-        'pays/overdue_invoices/',
-        views.PayViewSet.as_view({'get': 'overdue_invoices'}),
-        name='pay-overdue-invoices'
+        'process/overdue_invoices/',
+        views.ProcessViewSet.as_view({'get': 'overdue_invoices'}),
+        name='process-overdue-invoices'
     ),
     path(
-        'pays/revenue_summary/',
-        views.PayViewSet.as_view({'get': 'revenue_summary'}),
-        name='pay-revenue-summary'
+        'process/revenue_summary/',
+        views.ProcessViewSet.as_view({'get': 'revenue_summary'}),
+        name='process-revenue-summary'
     ),
     path(
         'payments/',
