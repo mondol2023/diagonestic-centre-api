@@ -10,13 +10,13 @@ from .models import Pay, Payment, PaymentRefund
 from .serializers import PaySerializer, PaymentSerializer, PaymentRefundSerializer
 
 # Create your views here.
-class PayViewSet(viewsets.ModelViewSet):
-    serializer_class = PaySerializer
+class ProcessViewSet(viewsets.ModelViewSet):
+    serializer_class = ProcessSerializer
     permission_classes = [IsAuthenticated]
     
     def get_queryset(self):
         user = self.request.user
-        queryset = Pay.objects.all()
+        queryset = Process.objects.all()
         
         if user.user_type == 'PATIENT':
             queryset = queryset.filter(patient=user)
@@ -31,7 +31,7 @@ class PayViewSet(viewsets.ModelViewSet):
     
     @action(detail=True, methods=['get'])
     def payment_history(self, request, pk=None):
-        pay = get_object_or_404(Pay, pk=pk)
+        pay = get_object_or_404(Process, pk=pk)
         payments = pay.payments.all().order_by('-payment_date')
         serializer = PaymentSerializer(payments, many=True)
         return Response(serializer.data)
@@ -42,7 +42,7 @@ class PayViewSet(viewsets.ModelViewSet):
             return Response({'error': 'Access denied'}, status=status.HTTP_403_FORBIDDEN)
         
         today = timezone.now().date()
-        overdue = Pay.objects.filter(
+        overdue = Process.objects.filter(
             due_date__lt=today,
             status__in=['PENDING', 'PARTIALLY_PAID']
         )
@@ -67,7 +67,7 @@ class PayViewSet(viewsets.ModelViewSet):
             payment_status='COMPLETED'
         ).aggregate(total=Sum('amount'))['total'] or 0
         
-        pending_amount = Pay.objects.filter(
+        pending_amount = Process.objects.filter(
             status__in=['PENDING', 'PARTIALLY_PAID']
         ).aggregate(total=Sum('total_amount'))['total'] or 0
         
